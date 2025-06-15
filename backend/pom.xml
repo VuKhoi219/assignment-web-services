@@ -74,6 +74,16 @@
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.11.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.12.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -99,6 +109,10 @@
                     <wsdlUrls>
                         <!-- !!! THAY THẾ BẰNG URL WSDL CỦA BẠN !!! -->
                         <wsdlUrl>http://localhost:8080/backend_war_exploded/userService?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:8080/backend_war_exploded/imageService?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:8080/backend_war_exploded/commentService?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:8080/backend_war_exploded/locationService?wsdl</wsdlUrl>
+
                     </wsdlUrls>
                     <keep>true</keep>
                     <verbose>true</verbose>
