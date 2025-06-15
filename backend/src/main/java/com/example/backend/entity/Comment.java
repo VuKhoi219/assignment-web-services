@@ -1,40 +1,42 @@
 package com.example.backend.entity;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "comments")
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id")
-    private Location location;
-
-    @Column(name = "content", columnDefinition = "TEXT")
-    private String content;
-
-    @Column(name = "author", length = 100)
-    private String author;
-
-    // Constructors
-    public Comment() {}
-
-    public Comment(Location location, String content, String author) {
-        this.location = location;
-        this.content = content;
-        this.author = author;
-    }
-
-    // Getters and Setters
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Location getLocation() {
@@ -45,19 +47,36 @@ public class Comment {
         this.location = location;
     }
 
-    public String getContent() {
-        return content;
+    public String getComment() {
+        return comment;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public String getAuthor() {
-        return author;
+    public Comment(User user, String comment, Location location, int rating) {
+        this.user = user;
+        this.comment = comment;
+        this.location = location;
+        this.rating = rating;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id")
+    @XmlTransient // Quan trọng: Tránh circular reference
+    private Location location;
+
+    @Column(name = "comment", columnDefinition = "TEXT")
+    private String comment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    private int rating;
+
+    // Constructors
+    public Comment() {}
+
 }

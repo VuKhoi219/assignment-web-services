@@ -2,7 +2,13 @@ package com.example.backend.entity;
 
 import javax.persistence.*;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "users")
 public class User {
@@ -16,6 +22,7 @@ public class User {
     private String username;
 
     @Column(name = "password", nullable = true, length = 100)
+    @XmlTransient // Không serialize password
     private String password;
 
     @Column(name = "email", nullable = true, length = 100)

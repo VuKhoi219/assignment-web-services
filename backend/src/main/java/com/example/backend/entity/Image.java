@@ -1,9 +1,15 @@
 package com.example.backend.entity;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
-@Table(name = "image")
+@Table(name = "images")
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,21 +17,32 @@ public class Image {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
+    @XmlTransient // Quan trọng: Tránh circular reference
     private Location location;
 
     @Column(name = "image_url", length = 255)
     private String imageUrl;
 
+    public String getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(String imageData) {
+        this.imageData = imageData;
+    }
+
     @Column(name = "caption", length = 255)
     private String caption;
+    private String imageData; // Thêm field này
 
     // Constructors
     public Image() {}
 
-    public Image(Location location, String imageUrl, String caption) {
+    public Image(Location location, String imageUrl,String imageData, String caption) {
         this.location = location;
         this.imageUrl = imageUrl;
         this.caption = caption;
+        this.imageData = imageData;
     }
 
     // Getters and Setters
