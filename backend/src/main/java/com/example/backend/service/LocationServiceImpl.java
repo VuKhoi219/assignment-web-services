@@ -245,8 +245,4 @@ public class LocationServiceImpl implements LocationService {
         }
     }
 
-//    @Override
-//    public List<Location> getLocationByKey(String key) {
-//        return Collections.emptyList();
-//    }
 }
