@@ -10,8 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="15cfc607-13c3-47ac-a13c-aca11a894742" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../client/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../client/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../client/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/HelloServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/java/com/example/client/HelloServlet.java" afterDir="false" />
@@ -197,7 +197,7 @@
       <workItem from="1750150062125" duration="5762000" />
       <workItem from="1750166522450" duration="3944000" />
       <workItem from="1750241022483" duration="338000" />
-      <workItem from="1750246173685" duration="609000" />
+      <workItem from="1750246173685" duration="1264000" />
     </task>
     <servers />
   </component>

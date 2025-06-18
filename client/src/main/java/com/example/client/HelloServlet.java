@@ -1,6 +1,7 @@
 package com.example.client;
 
 import java.io.*;
+import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
@@ -12,14 +13,14 @@ public class HelloServlet extends HttpServlet {
         message = "Hello World!";
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/html");
 
-        // Hello
-        PrintWriter out = response.getWriter();
-        out.println("<html><body>");
-        out.println("<h1>" + message + "</h1>");
-        out.println("</body></html>");
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        // Truyền trang nội dung cần nhúng (ví dụ: pages/home.jsp)
+        request.setAttribute("content", "pages/home.jsp");
+        response.setContentType("text/html; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        // Chuyển hướng đến layout.jsp
+        request.getRequestDispatcher("layout.jsp").forward(request, response);
     }
 
     public void destroy() {
