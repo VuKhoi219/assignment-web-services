@@ -5,6 +5,7 @@ import com.example.backend.dto.CommentListWrapper;
 import com.example.backend.entity.Comment;
 import com.example.backend.entity.Location;
 import com.example.backend.entity.User;
+import com.example.backend.util.CheckRole;
 
 import javax.jws.WebService;
 import java.sql.*;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @WebService(endpointInterface = "com.example.backend.service.CommentService")
 public class CommentServiceImpl implements CommentService{
+    private CheckRole checkRole = new CheckRole();
 
     private Connection getConnection() throws SQLException {
         try {
@@ -108,7 +110,10 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public String createComment(int  locationId, String comment, int userId, int rating) {
+    public String createComment(int  locationId, String comment, int userId, int rating,String token) {
+        if(!checkRole.checkRole(token,"consumer")){
+            return "Bạn không có quyền sử dụng";
+        }
         try (Connection conn = getConnection()) {
             // Kiểm tra rating hợp lệ (1-5)
             if (rating < 1 || rating > 5) {
@@ -150,7 +155,10 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public String updateComment(String commentComment, int rating, int commentId) {
+    public String updateComment(String commentComment, int rating, int commentId ,String token) {
+        if(!checkRole.checkRole(token,"consumer")){
+            return "Bạn không có quyền sử dụng";
+        }
         try (Connection conn = getConnection()) {
             // Kiểm tra rating hợp lệ (1-5)
             if (rating < 1 || rating > 5) {
@@ -193,7 +201,10 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public String deleteComment(int id) {
+    public String deleteComment(int id, String token) {
+        if(!checkRole.checkRole(token,"consumer")){
+            return "Bạn không có quyền sử dụng";
+        }
         try (Connection conn = getConnection()) {
             // Kiểm tra comment có tồn tại không
             String checkSql = "SELECT comment FROM comments WHERE id = ?";

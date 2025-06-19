@@ -30,12 +30,12 @@ public interface LocationService {
     @WebResult(name = "return", targetNamespace = "")
     public Location getLocation(int id);
     @WebMethod
-    Location createLocation(String title, String description, int guideId);
+    Location createLocation(String title, String description, int guideId,String token);
 
     @WebMethod
-    Location updateLocation(String title, String description, int id);
+    Location updateLocation(String title, String description, int id,String token);
     @WebMethod
-    boolean deleteLocation(int id);
+    boolean deleteLocation(int id,String token);
 //    @WebMethod
 //    List<Location> getLocationByKey(String key);
 

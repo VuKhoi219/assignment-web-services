@@ -6,6 +6,7 @@ import com.example.backend.entity.Comment;
 import com.example.backend.entity.Image;
 import com.example.backend.entity.Location;
 import com.example.backend.entity.User;
+import com.example.backend.util.CheckRole;
 
 import javax.jws.WebService;
 import java.sql.*;
@@ -27,6 +28,7 @@ public class LocationServiceImpl implements LocationService {
             throw new SQLException("MySQL Driver not found", e);
         }
     }
+    private CheckRole checkRole = new CheckRole();
 
     @Override
     public LocationListWrapper getLocations() {
@@ -133,7 +135,6 @@ public class LocationServiceImpl implements LocationService {
                             }
                         }
                     }
-
                     // Set lists cho location
                     if (location != null) {
                         location.setImages(new ArrayList<>(imageMap.values()));
@@ -149,7 +150,17 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Location createLocation(String title, String description, int guideId) {
+    public Location createLocation(String title, String description, int guideId,String token) {
+        System.out.println("Received token: " + token);
+        System.out.println("Dot count: " + token.chars().filter(c -> c == '.').count());
+        System.out.println(checkRole.checkRole(token,"guide"));
+        if(!checkRole.checkRole(token,"guide")){
+            Location empty = new Location();
+            empty.setId(-1); // hoặc ID đặc biệt báo lỗi
+            empty.setTitle("Unauthorized");
+            empty.setDescription("You are not allowed to perform this action.");
+            return empty;
+        }
         try (Connection conn = getConnection()) {
             String sql = "INSERT INTO locations (title, description, guide_id) VALUES (?, ?, ?)";
             try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -184,13 +195,27 @@ public class LocationServiceImpl implements LocationService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        Location empty = new Location();
+        empty.setId(-1); // hoặc ID đặc biệt báo lỗi
+        empty.setTitle("Lỗi Server");
+        empty.setDescription("Lỗi Server");
+        return empty;
     }
 
 
     // Hoặc nếu bạn muốn trả về Location object sau khi update:
     @Override
-    public Location updateLocation(String title, String description, int id) {
+    public Location updateLocation(String title, String description, int id, String token) {
+        System.out.println("Received token: " + token);
+        System.out.println("Dot count: " + token.chars().filter(c -> c == '.').count());
+        System.out.println(checkRole.checkRole(token,"guide"));
+        if(!checkRole.checkRole(token,"guide")){
+            Location empty = new Location();
+            empty.setId(-1); // hoặc ID đặc biệt báo lỗi
+            empty.setTitle("Unauthorized");
+            empty.setDescription("You are not allowed to perform this action.");
+            return empty;
+        }
         try (Connection conn = getConnection()) {
             String sql = "UPDATE locations SET title = ?, description = ? WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -230,7 +255,10 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public boolean deleteLocation(int id) {
+    public boolean deleteLocation(int id,String token) {
+        if(!checkRole.checkRole(token,"guide")){
+            return false;
+        }
         try (Connection conn = getConnection()) {
             String sql = "DELETE FROM locations WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {

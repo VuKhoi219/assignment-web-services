@@ -19,11 +19,11 @@ public interface CommentService {
     @WebMethod
      Comment getComment(int id);
     @WebMethod
-    String createComment(int  locationId, String comment, int userId, int rating);
+    String createComment(int  locationId, String comment, int userId, int rating,String token);
     @WebMethod
-    String updateComment( String Comment,int rating , int commentId );
+    String updateComment( String Comment,int rating , int commentId,String token );
     @WebMethod
-    String deleteComment(int id);
+    String deleteComment(int id,String token);
     @WebMethod
     double getAverageRatingByLocation(int locationId);
 }

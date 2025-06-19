@@ -4,6 +4,7 @@ import com.example.backend.dto.ImageDTO;
 import com.example.backend.dto.ImageListWrapper;
 import com.example.backend.entity.Image;
 import com.example.backend.entity.Location;
+import com.example.backend.util.CheckRole;
 import com.example.backend.util.FileUploadUtil;
 
 import javax.jws.WebService;
@@ -16,6 +17,7 @@ import java.util.Base64;
 
 @WebService(endpointInterface = "com.example.backend.service.ImageService")
 public class ImageServiceImpl implements ImageService {
+    private CheckRole checkRole = new CheckRole();
 
     private FileUploadUtil fileUploadUtil = new FileUploadUtil();
 
@@ -104,11 +106,14 @@ public class ImageServiceImpl implements ImageService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return new Image();
     }
 
     @Override
-    public String uploadImage(int locationId, String base64ImageData, String filename, String caption) {
+    public String uploadImage(int locationId, String base64ImageData, String filename, String caption,String token) {
+        if(!checkRole.checkRole(token,"guide")){
+            return "Bạn không có quyền sử dụng";
+        }
         try {
             // Kiểm tra location tồn tại
             if (!isLocationExists(locationId)) {
@@ -129,7 +134,10 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public String updateImage(int imageId, String base64ImageData, String filename, String caption) {
+    public String updateImage(int imageId, String base64ImageData, String filename, String caption, String token) {
+        if(!checkRole.checkRole(token,"guide")){
+            return "Bạn không có quyền sử dụng";
+        }
         try (Connection conn = getConnection()) {
             // Lấy thông tin image cũ
             String oldImageUrl = null;
@@ -180,7 +188,10 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public String deleteImage(int id) {
+    public String deleteImage(int id, String token) {
+        if(!checkRole.checkRole(token,"guide")){
+            return "Bạn không có quyền sử dụng";
+        }
         try (Connection conn = getConnection()) {
             // Lấy thông tin image
             String imageUrl = null;

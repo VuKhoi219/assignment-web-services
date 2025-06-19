@@ -31,18 +31,6 @@ public class UserServiceImpl implements UserService {
     @WebMethod
     public String register(String username, String password, String email, String role) {
         // Validate input parameters
-//        if (username == null || username.trim().isEmpty()) {
-//            return "Registration failed: Username is required";
-//        }
-//        if (password == null || password.length() < 6) {
-//            return "Registration failed: Password must be at least 6 characters";
-//        }
-//        if (email == null || email.trim().isEmpty()) {
-//            return "Registration failed: Email is required";
-//        }
-//        if (role == null || role.trim().isEmpty()) {
-//            return "Registration failed: Role is required";
-//        }
 
         try (Connection conn = getConnection()) {
             // Check if username already exists
