@@ -19,8 +19,9 @@ public class HelloServlet extends HttpServlet {
         request.setAttribute("content", "pages/home.jsp");
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
+
         // Chuyển hướng đến layout.jsp
-        request.getRequestDispatcher("layout.jsp").forward(request, response);
+        request.getRequestDispatcher("pages/home.jsp").forward(request, response);
     }
 
     public void destroy() {

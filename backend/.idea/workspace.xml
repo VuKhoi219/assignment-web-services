@@ -10,18 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="15cfc607-13c3-47ac-a13c-aca11a894742" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/util/CheckRole.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/service/CommentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/service/CommentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/service/CommentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/service/CommentServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/service/ImageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/service/ImageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/service/ImageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/service/ImageServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/service/LocationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/service/LocationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/service/LocationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/service/LocationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/service/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/service/UserServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/HelloServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/java/com/example/client/HelloServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/auth/AuthFilter.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/auth/RegisterAndLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/java/com/example/client/auth/RegisterAndLogin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/pages/home.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/webapp/pages/home.jsp" afterDir="false" />
@@ -211,7 +201,7 @@
       <workItem from="1750297227341" duration="1255000" />
       <workItem from="1750301942100" duration="3109000" />
       <workItem from="1750320085227" duration="3854000" />
-      <workItem from="1750340867272" duration="7271000" />
+      <workItem from="1750340867272" duration="8136000" />
     </task>
     <servers />
   </component>
