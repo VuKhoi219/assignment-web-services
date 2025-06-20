@@ -101,6 +101,7 @@ public class RegisterAndLogin extends HttpServlet {
                 response.setContentType("text/html");
                 PrintWriter out = response.getWriter();
                 response.sendRedirect("hello-servlet"); // Không cần dấu "/" đầu nếu không dùng contextPath
+
             } else {
                 request.setAttribute("message", result);
                 request.setAttribute("messageType", "Unsuccessful");
