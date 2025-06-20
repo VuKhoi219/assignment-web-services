@@ -23,7 +23,7 @@ public interface ImageService {
 
     @WebMethod
     String uploadImage(int locationId,
-                      String base64ImageData,
+                        String base64ImageData,
                        String filename,
                        String caption,String token);
 

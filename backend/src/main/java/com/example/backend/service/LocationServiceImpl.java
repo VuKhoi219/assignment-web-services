@@ -9,6 +9,8 @@ import com.example.backend.entity.User;
 import com.example.backend.util.CheckRole;
 
 import javax.jws.WebService;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.*;
 
@@ -106,7 +108,11 @@ public class LocationServiceImpl implements LocationService {
                             if (!imageMap.containsKey(imageId)) {
                                 Image image = new Image();
                                 image.setId(imageId);
-                                image.setImageUrl(rs.getString("image_url"));
+                                String imageUrl = rs.getString("image_url");
+                                String base64Data = convertImageToBase64(imageUrl);
+                                // Giả sử Image class có field imageData
+                                String mimeType = Files.probeContentType(Paths.get(imageUrl));
+                                image.setImageData("data:" + mimeType + ";base64," + base64Data);
                                 image.setCaption(rs.getString("caption"));
                                 imageMap.put(imageId, image);
                             }
@@ -272,5 +278,16 @@ public class LocationServiceImpl implements LocationService {
             return false;
         }
     }
-
+    private String convertImageToBase64(String imageUrl) {
+        try {
+            if (imageUrl != null && imageUrl.startsWith("/uploads/images/")) {
+                String filename = imageUrl.substring("/uploads/images/".length());
+                byte[] fileBytes = Files.readAllBytes(Paths.get("uploads/images/" + filename));
+                return Base64.getEncoder().encodeToString(fileBytes);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
