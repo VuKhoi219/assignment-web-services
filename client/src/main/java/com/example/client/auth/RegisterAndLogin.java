@@ -67,7 +67,6 @@ public class RegisterAndLogin extends HttpServlet {
             if (!result.equals("Login failed: Invalid credentials") &&
                     !result.equals("Login failed: Username is required") &&
                     !result.equals("Login failed: Password is required")) {
-                System.out.println("Vào đây");
                 // Giải mã token để lấy role
                 Claims claims = null;
                 try {
@@ -95,14 +94,14 @@ public class RegisterAndLogin extends HttpServlet {
                 session.setAttribute("role", role);
                 session.setAttribute("username", usernameFromToken);
                 session.setAttribute("userId", userId);
-
+                System.out.println(role);
+                System.out.println(userId);
+                System.out.println(usernameFromToken);
                 // Gửi token vào localStorage và chuyển hướng
                 response.setContentType("text/html");
                 PrintWriter out = response.getWriter();
-                out.println("<script>");
-                out.println("localStorage.setItem('token', '" + result + "');");
-                out.println("window.location.href = '/client_war_exploded/hello-servlet';");
-                out.println("</script>");
+                response.sendRedirect("hello-servlet"); // Không cần dấu "/" đầu nếu không dùng contextPath
+
             } else {
                 request.setAttribute("message", result);
                 request.setAttribute("messageType", "Unsuccessful");

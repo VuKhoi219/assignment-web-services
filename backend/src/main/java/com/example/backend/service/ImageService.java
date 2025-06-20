@@ -23,18 +23,18 @@ public interface ImageService {
 
     @WebMethod
     String uploadImage(int locationId,
-                      String base64ImageData,
+                        String base64ImageData,
                        String filename,
-                       String caption);
+                       String caption,String token);
 
     @WebMethod
     String updateImage(int imageId,
                        String base64ImageData,
                        String filename,
-                       String caption);
+                       String caption,String token);
 
     @WebMethod
-    String deleteImage(int id);
+    String deleteImage(int id,String token);
 
     @WebMethod
     ArrayList<Image> getImagesByLocation(int locationId);
