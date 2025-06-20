@@ -101,7 +101,7 @@ public class RegisterAndLogin extends HttpServlet {
                 PrintWriter out = response.getWriter();
                 out.println("<script>");
                 out.println("localStorage.setItem('token', '" + result + "');");
-                out.println("window.location.href = '/hello-servlet';");
+                out.println("window.location.href = '/client_war_exploded/hello-servlet';");
                 out.println("</script>");
             } else {
                 request.setAttribute("message", result);

@@ -20,7 +20,7 @@ public class CommentServiceImpl implements CommentService{
             // Load driver
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/wed_service?useSSL=false&serverTimezone=UTC",
+                    "jdbc:mysql://localhost:3306/web_service?useSSL=false&serverTimezone=UTC",
                     "root",
                     ""
             );
