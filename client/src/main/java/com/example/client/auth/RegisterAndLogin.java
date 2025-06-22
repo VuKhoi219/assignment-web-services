@@ -33,10 +33,14 @@ public class RegisterAndLogin extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("register".equals(action)) {
-            request.getRequestDispatcher("pages/register.jsp").forward(request, response);
+//            request.getRequestDispatcher("pages/register.jsp").forward(request, response);
+            request.setAttribute("content", "pages/register.jsp");
+            request.getRequestDispatcher("layout.jsp").forward(request, response);
         } else {
             // Mặc định hiển thị trang login
-            request.getRequestDispatcher("pages/login.jsp").forward(request, response);
+//            request.getRequestDispatcher("pages/login.jsp").forward(request, response);
+            request.setAttribute("content", "pages/login.jsp");
+            request.getRequestDispatcher("layout.jsp").forward(request, response);
         }
     }
 
@@ -63,7 +67,6 @@ public class RegisterAndLogin extends HttpServlet {
         String password = request.getParameter("password");
         try {
             String result = service.login(username, password);
-            System.out.println(result);
             if (!result.equals("Login failed: Invalid credentials") &&
                     !result.equals("Login failed: Username is required") &&
                     !result.equals("Login failed: Password is required")) {
@@ -75,8 +78,6 @@ public class RegisterAndLogin extends HttpServlet {
                             .build()
                             .parseClaimsJws(result)
                             .getBody();
-
-                    System.out.println("Jwt claims: " + claims);
                 } catch (Exception e) {
                     e.printStackTrace(); // In lỗi đầy đủ
                     request.setAttribute("error", "Token không hợp lệ: " + e.getMessage());
@@ -85,27 +86,19 @@ public class RegisterAndLogin extends HttpServlet {
                 String role = claims.get("role", String.class);
                 String usernameFromToken = claims.get("username", String.class);
                 int userId = claims.get("id", Integer.class);
-                System.out.println(role);
-                System.out.println(userId);
-
-                // Lưu token và thông tin vào session
                 HttpSession session = request.getSession();
                 session.setAttribute("token", result);
                 session.setAttribute("role", role);
                 session.setAttribute("username", usernameFromToken);
                 session.setAttribute("userId", userId);
-                System.out.println(role);
-                System.out.println(userId);
-                System.out.println(usernameFromToken);
-                // Gửi token vào localStorage và chuyển hướng
                 response.setContentType("text/html");
                 PrintWriter out = response.getWriter();
-                response.sendRedirect("hello-servlet"); // Không cần dấu "/" đầu nếu không dùng contextPath
+                response.sendRedirect("/");
 
             } else {
                 request.setAttribute("message", result);
                 request.setAttribute("messageType", "Unsuccessful");
-                request.getRequestDispatcher("pages/login.jsp").forward(request, response);
+                response.sendRedirect("/auth?action=login");
             }
         } catch (Exception e) {
             request.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
@@ -134,19 +127,19 @@ public class RegisterAndLogin extends HttpServlet {
                 System.out.println("Vào đây 2");
 
                 // Chuyển đến trang login với thông báo
-                request.getRequestDispatcher("pages/login.jsp").forward(request, response);
+                response.sendRedirect("/auth?action=login");
             } else {
                 // Đăng ký thất bại
                 System.out.println("Vào đây 3");
 
                 request.setAttribute("error", result);
-                request.getRequestDispatcher("pages/register.jsp").forward(request, response);
+                response.sendRedirect("/auth?action=register");
             }
 
         } catch (Exception e) {
             // Lỗi xảy ra
             request.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
-            request.getRequestDispatcher("pages/register.jsp").forward(request, response);
+            response.sendRedirect("/auth?action=register");
         }
     }
 }

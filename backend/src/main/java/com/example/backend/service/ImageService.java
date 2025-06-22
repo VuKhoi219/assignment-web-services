@@ -38,7 +38,6 @@ public interface ImageService {
 
     @WebMethod
     ArrayList<Image> getImagesByLocation(int locationId);
-
     @WebMethod
-    String getImageAsBase64(int imageId);
+    byte[] serveImage(int imageId);
 }

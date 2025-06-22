@@ -1,188 +1,164 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!-- pages/home.jsp -->
-<div class="home-container">
-    <div class="hero-section">
-        <h1>Chào mừng đến với Hệ thống Du lịch</h1>
-        <p class="hero-subtitle">Khám phá những điểm đến tuyệt vời trên khắp đất nước</p>        <div class="hero-actions">
-            <a href="${pageContext.request.contextPath}/locations" class="btn btn-primary btn-large">
-                <i class="icon-location"></i>
-                Xem Danh Sách Địa Điểm
-            </a>
-            <a href="${pageContext.request.contextPath}/login" class="btn btn-secondary btn-large">
-                <i class="icon-user"></i>
-                Đăng Nhập
-            </a>
-        </div>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center text-blue-800 mb-8">Khám phá địa điểm du lịch</h1>
+
+    <!-- Search Box -->
+    <div class="max-w-2xl mx-auto mb-10 relative">
+        <form method="GET" action="${pageContext.request.contextPath}/" class="relative">
+            <input
+                    type="text"
+                    name="search"
+                    id="searchInput"
+                    placeholder="Tìm kiếm địa điểm..."
+                    value="${searchTerm}"
+                    class="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 focus:border-blue-500 search-box"
+            >
+            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input type="hidden" name="page" value="1">
+        </form>
     </div>
-    
-    <div class="features-section">
-        <div class="feature-card">
-            <div class="feature-icon">📍</div>
-            <h3>Địa Điểm Du Lịch</h3>
-            <p>Khám phá hàng trăm điểm đến hấp dẫn với thông tin chi tiết và hình ảnh đẹp mắt</p>
+
+    <!-- Search Results Info -->
+    <c:if test="${not empty searchTerm}">
+        <div class="text-center mb-6">
+            <p class="text-gray-600">
+                Tìm thấy <span class="font-semibold text-blue-600">${totalItems}</span>
+                kết quả cho "<span class="font-semibold">${searchTerm}</span>"
+            </p>
         </div>
-        
-        <div class="feature-card">
-            <div class="feature-icon">📸</div>
-            <h3>Hình Ảnh Chất Lượng</h3>
-            <p>Xem những hình ảnh chất lượng cao về các địa điểm để có cái nhìn trực quan nhất</p>
-        </div>
-        
-        <div class="feature-card">
-            <div class="feature-icon">💬</div>
-            <h3>Đánh Giá & Bình Luận</h3>
-            <p>Đọc và chia sẻ những trải nghiệm thực tế từ cộng đồng du lịch</p>
-        </div>
+    </c:if>
+
+    <!-- Place Cards Grid -->
+    <div id="placesContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+        <c:choose>
+            <c:when test="${empty places}">
+                <div class="col-span-full text-center py-10">
+                    <i class="fas fa-map-marker-alt text-4xl text-gray-300 mb-4"></i>
+                    <p class="text-xl text-gray-500">Không tìm thấy địa điểm phù hợp</p>
+                    <c:if test="${not empty searchTerm}">
+                        <a href="${pageContext.request.contextPath}/" class="inline-block mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+                            Xem tất cả địa điểm
+                        </a>
+                    </c:if>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <c:forEach var="place" items="${places}">
+                    <div class="card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="relative h-40 overflow-hidden">
+                            <img src="${place.image}" alt="${place.title}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">${place.title}</h3>
+                            <p class="text-gray-600 text-sm mb-3">${place.description}</p>
+                            <div class="flex justify-between items-center">
+                                <a href="${pageContext.request.contextPath}/location?id=${place.id}">
+                                    <button class="text-blue-600 text-sm font-medium hover:text-blue-800 transition">
+                                        Xem chi tiết
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
     </div>
+
+    <!-- Pagination -->
+    <c:if test="${totalPages > 1}">
+        <div class="flex justify-center mt-8">
+            <nav class="inline-flex rounded-md shadow-sm">
+                <!-- Previous Button -->
+                <c:choose>
+                    <c:when test="${currentPage > 1}">
+                        <a href="?page=${currentPage - 1}<c:if test='${not empty searchTerm}'>&search=${searchTerm}</c:if>"
+                           class="px-3 py-1 rounded-l-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <span class="px-3 py-1 rounded-l-md border border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    </c:otherwise>
+                </c:choose>
+
+                <!-- Page Numbers -->
+                <div class="flex">
+                    <!-- First page -->
+                    <c:if test="${currentPage == 1}">
+                        <span class="px-3 py-1 border-t border-b border-gray-300 bg-blue-500 text-white">1</span>
+                    </c:if>
+                    <c:if test="${currentPage != 1}">
+                        <a href="?page=1<c:if test='${not empty searchTerm}'>&search=${searchTerm}</c:if>"
+                           class="px-3 py-1 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">1</a>
+                    </c:if>
+
+                    <!-- Ellipsis before current page range -->
+                    <c:if test="${currentPage > 3}">
+                        <span class="px-3 py-1 border-t border-b border-gray-300 bg-white text-gray-500">...</span>
+                    </c:if>
+
+                    <!-- Current page and neighbors -->
+                    <c:set var="startPage" value="${currentPage > 2 ? currentPage - 1 : 2}" />
+                    <c:set var="endPage" value="${currentPage < totalPages - 1 ? currentPage + 1 : totalPages - 1}" />
+
+                    <c:forEach var="i" begin="${startPage}" end="${endPage}">
+                        <c:if test="${i > 1 && i < totalPages}">
+                            <c:choose>
+                                <c:when test="${i == currentPage}">
+                                    <span class="px-3 py-1 border-t border-b border-gray-300 bg-blue-500 text-white">${i}</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="?page=${i}<c:if test='${not empty searchTerm}'>&search=${searchTerm}</c:if>"
+                                       class="px-3 py-1 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">${i}</a>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
+                    </c:forEach>
+
+                    <!-- Ellipsis after current page range -->
+                    <c:if test="${currentPage < totalPages - 2}">
+                        <span class="px-3 py-1 border-t border-b border-gray-300 bg-white text-gray-500">...</span>
+                    </c:if>
+
+                    <!-- Last page -->
+                    <c:if test="${totalPages > 1}">
+                        <c:choose>
+                            <c:when test="${currentPage == totalPages}">
+                                <span class="px-3 py-1 border-t border-b border-gray-300 bg-blue-500 text-white">${totalPages}</span>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="?page=${totalPages}<c:if test='${not empty searchTerm}'>&search=${searchTerm}</c:if>"
+                                   class="px-3 py-1 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">${totalPages}</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
+                </div>
+
+                <!-- Next Button -->
+                <c:choose>
+                    <c:when test="${currentPage < totalPages}">
+                        <a href="?page=${currentPage + 1}<c:if test='${not empty searchTerm}'>&search=${searchTerm}</c:if>"
+                           class="px-3 py-1 rounded-r-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <span class="px-3 py-1 rounded-r-md border border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    </c:otherwise>
+                </c:choose>
+            </nav>
+        </div>
+
+        <!-- Pagination Info -->
+        <div class="text-center mt-4 text-sm text-gray-600">
+            Trang ${currentPage} / ${totalPages} - Hiển thị ${places.size()} / ${totalItems} địa điểm
+        </div>
+    </c:if>
 </div>
-
-<style>
-.home-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.hero-section {
-    text-align: center;
-    padding: 60px 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-radius: 20px;
-    margin-bottom: 60px;
-}
-
-.hero-section h1 {
-    font-size: 3em;
-    margin: 0 0 20px 0;
-    font-weight: 700;
-}
-
-.hero-subtitle {
-    font-size: 1.3em;
-    margin: 0 0 40px 0;
-    opacity: 0.9;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.hero-actions {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.features-section {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
-}
-
-.feature-card {
-    background: white;
-    padding: 40px 30px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}
-
-.feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-}
-
-.feature-icon {
-    font-size: 4em;
-    margin-bottom: 20px;
-}
-
-.feature-card h3 {
-    font-size: 1.5em;
-    margin: 0 0 15px 0;
-    color: #333;
-}
-
-.feature-card p {
-    color: #666;
-    line-height: 1.6;
-    margin: 0;
-}
-
-.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px 30px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    font-size: 1.1em;
-}
-
-.btn-large {
-    padding: 18px 35px;
-    font-size: 1.2em;
-}
-
-.btn-primary {
-    background: #fff;
-    color: #667eea;
-}
-
-.btn-primary:hover {
-    background: #f8f9ff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-}
-
-.btn-secondary {
-    background: transparent;
-    color: white;
-    border: 2px solid white;
-}
-
-.btn-secondary:hover {
-    background: white;
-    color: #667eea;
-    transform: translateY(-2px);
-}
-
-.icon-location::before { content: "📍"; }
-.icon-user::before { content: "👤"; }
-
-@media (max-width: 768px) {
-    .hero-section h1 {
-        font-size: 2.2em;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.1em;
-    }
-    
-    .hero-actions {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .hero-actions .btn {
-        width: 280px;
-        justify-content: center;
-    }
-    
-    .features-section {
-        grid-template-columns: 1fr;
-    }
-    
-    .home-container {
-        padding: 15px;
-    }
-}
-</style>

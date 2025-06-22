@@ -12,6 +12,15 @@ public class LocationDTO {
     private Integer id;
     private String title;
     private String description;
+    private String imageData;
+
+    public String getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(String imageData) {
+        this.imageData = imageData;
+    }
 
     // Constructor
     public LocationDTO() {}
@@ -40,10 +49,11 @@ public class LocationDTO {
         this.description = description;
     }
 
-    public LocationDTO(int id, String title, String description) {
+    public LocationDTO(int id, String title, String description, String imageData) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.imageData = imageData;
     }
 
 }

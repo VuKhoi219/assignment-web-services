@@ -13,69 +13,65 @@ public class FileUploadUtil {
     private static final String[] ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"};
 
     public String uploadImageFromBase64(String base64Data, String originalFilename) throws IOException {
-        // Validate và decode base64
-        byte[] fileBytes = validateAndDecodeBase64(base64Data, originalFilename);
-
-        // Create upload directory if not exists
-        createUploadDirectory();
-
-        // Generate unique filename
-        String fileExtension = getFileExtension(originalFilename);
-        String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
-
-        // Save file to server
-        Path uploadPath = Paths.get(UPLOAD_DIR + uniqueFilename);
         try {
+            System.out.println("=== UPLOAD DEBUG ===");
+            System.out.println("Original filename: " + originalFilename);
+            System.out.println("Base64 data length: " + (base64Data != null ? base64Data.length() : "null"));
+            System.out.println("Base64 starts with: " + (base64Data != null && base64Data.length() > 50 ? base64Data.substring(0, 50) : base64Data));
+
+            // Validate và decode base64
+            System.out.println("Step 1: Validating and decoding base64...");
+            byte[] fileBytes = validateAndDecodeBase64(base64Data, originalFilename);
+            System.out.println("Step 1: SUCCESS - File bytes length: " + fileBytes.length);
+
+            // Create upload directory if not exists
+            System.out.println("Step 2: Creating upload directory...");
+            createUploadDirectory();
+            System.out.println("Step 2: SUCCESS");
+
+            // Generate unique filename
+            System.out.println("Step 3: Generating filename...");
+            String fileExtension = getFileExtension(originalFilename);
+            String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
+            System.out.println("Step 3: SUCCESS - Unique filename: " + uniqueFilename);
+
+            // Save file to server
+            System.out.println("Step 4: Saving file...");
+            Path uploadPath = Paths.get(UPLOAD_DIR + uniqueFilename);
+            System.out.println("Upload path: " + uploadPath.toString());
+
             Files.write(uploadPath, fileBytes);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+            System.out.println("Step 4: SUCCESS - File saved");
 
-        // Return URL path
-        return "/uploads/images/" + uniqueFilename;
+            // Return URL path
+            String result = "/uploads/images/" + uniqueFilename;
+            System.out.println("Final result: " + result);
+            return result;
+
+        } catch (Exception e) {
+            System.out.println("ERROR in uploadImageFromBase64: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
-    private byte[] validateAndDecodeBase64(String base64Data, String filename) throws IOException {
-        if (base64Data == null || base64Data.trim().isEmpty()) {
-            throw new IOException("File data is empty");
-        }
-
-        // Remove data URL prefix if exists (data:image/png;base64,)
-        if (base64Data.contains(",")) {
-            base64Data = base64Data.split(",")[1];
-        }
-
-        byte[] fileBytes;
+    private byte[] validateAndDecodeBase64(String base64Data, String filename) {
         try {
-            fileBytes = Base64.getDecoder().decode(base64Data);
-        } catch (IllegalArgumentException e) {
-            throw new IOException("Invalid base64 data");
-        }
-
-        if (fileBytes.length > MAX_FILE_SIZE) {
-            throw new IOException("File size exceeds maximum limit of 5MB");
-        }
-
-        if (filename == null) {
-            throw new IOException("Invalid filename");
-        }
-
-        String extension = getFileExtension(filename).toLowerCase();
-        boolean isValidExtension = false;
-        for (String allowedExt : ALLOWED_EXTENSIONS) {
-            if (extension.equals(allowedExt)) {
-                isValidExtension = true;
-                break;
+            // Nếu có data URI prefix, loại bỏ nó
+            if (base64Data.startsWith("data:")) {
+                int commaIndex = base64Data.indexOf(',');
+                if (commaIndex != -1) {
+                    base64Data = base64Data.substring(commaIndex + 1);
+                }
             }
-        }
 
-        if (!isValidExtension) {
-            throw new IOException("Invalid file type. Only image files are allowed");
+            // Decode base64
+            return Base64.getDecoder().decode(base64Data);
+        } catch (Exception e) {
+            System.out.println("Base64 decode error: " + e.getMessage());
+            throw new RuntimeException("Invalid base64 data", e);
         }
-
-        return fileBytes;
     }
-
     private String getFileExtension(String filename) {
         if (filename == null || filename.lastIndexOf('.') == -1) {
             return "";

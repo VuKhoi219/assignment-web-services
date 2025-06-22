@@ -14,8 +14,10 @@ import java.nio.file.Paths;
 import java.sql.*;
 import java.util.*;
 
+
 @WebService(endpointInterface = "com.example.backend.service.LocationService")
 public class LocationServiceImpl implements LocationService {
+    private static final String BASE_IMAGE_URL = "http://localhost:8080/backend_war_exploded/api/images/serve/";
 
     private Connection getConnection() throws SQLException {
         try {
@@ -37,7 +39,15 @@ public class LocationServiceImpl implements LocationService {
         ArrayList<LocationDTO> locations = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
-            String query = "SELECT id, title, description FROM locations";
+            String query = "SELECT l.id, l.title, l.description, " +
+                    "i.id as image_id " +  // Thêm alias này
+                    "FROM locations l " +
+                    "LEFT JOIN images i ON l.id = i.location_id " +
+                    "WHERE i.id = ( " +
+                    "    SELECT MIN(id) " +
+                    "    FROM images i2 " +
+                    "    WHERE i2.location_id = l.id " +
+                    ") OR i.id IS NULL";
             try (PreparedStatement ps = conn.prepareStatement(query)) {
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -45,6 +55,14 @@ public class LocationServiceImpl implements LocationService {
                         location.setId(rs.getInt("id"));
                         location.setTitle(rs.getString("title"));
                         location.setDescription(rs.getString("description"));
+                        // Xử lý ảnh
+                        int imageId = rs.getInt("image_id");
+                        if (imageId > 0) { // Có ảnh
+                            String imageUrl = BASE_IMAGE_URL + imageId;
+                            location.setImageData(imageUrl);
+                        } else { // Không có ảnh
+                            location.setImageData(null); // hoặc default image
+                        }
                         locations.add(location);
                     }
                 }
@@ -52,12 +70,12 @@ public class LocationServiceImpl implements LocationService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
         return new LocationListWrapper(locations);
     }
 
     @Override
     public Location getLocation(int id) {
+        System.out.println("Getting location by id: " + id);
         try (Connection conn = getConnection()) {
             // Query với LEFT JOIN dựa theo các entities thực tế
             String query =
@@ -91,7 +109,6 @@ public class LocationServiceImpl implements LocationService {
 
                             // Set guide nếu có
                             if (rs.getString("guide_id") != null) {
-                                System.out.println("Vào đây");
                                 User guide = new User();
                                 guide.setId(rs.getInt("guide_id"));
                                 guide.setUsername(rs.getString("guide_username"));
@@ -102,17 +119,16 @@ public class LocationServiceImpl implements LocationService {
                             }
                         }
 
-                        // Thêm image nếu có và chưa tồn tại
                         if (rs.getObject("image_id") != null) {
                             int imageId = rs.getInt("image_id");
                             if (!imageMap.containsKey(imageId)) {
                                 Image image = new Image();
                                 image.setId(imageId);
-                                String imageUrl = rs.getString("image_url");
-                                String base64Data = convertImageToBase64(imageUrl);
-                                // Giả sử Image class có field imageData
-                                String mimeType = Files.probeContentType(Paths.get(imageUrl));
-                                image.setImageData("data:" + mimeType + ";base64," + base64Data);
+
+                                // Dùng URL API thay vì Base64
+                                String imageApiUrl = BASE_IMAGE_URL + imageId;
+                                image.setImageUrl(imageApiUrl); // Dùng setImageUrl thay vì setImageData
+
                                 image.setCaption(rs.getString("caption"));
                                 imageMap.put(imageId, image);
                             }
@@ -136,7 +152,6 @@ public class LocationServiceImpl implements LocationService {
                                     commentUser.setRole(rs.getString("comment_role"));
                                     comment.setUser(commentUser);
                                 }
-
                                 commentMap.put(commentId, comment);
                             }
                         }
@@ -261,21 +276,62 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public boolean deleteLocation(int id,String token) {
+    public boolean deleteLocation(int id, String token) {
         if(!checkRole.checkRole(token,"guide")){
             return false;
         }
-        try (Connection conn = getConnection()) {
-            String sql = "DELETE FROM locations WHERE id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setInt(1, id);
 
-                int affectedRows = stmt.executeUpdate();
-                return affectedRows > 0; // Trả về true nếu xóa thành công
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false); // Bắt đầu transaction
+
+            // 1. Xóa comments trước
+            String deleteComments = "DELETE FROM comments WHERE location_id = ?";
+            try (PreparedStatement stmt1 = conn.prepareStatement(deleteComments)) {
+                stmt1.setInt(1, id);
+                stmt1.executeUpdate();
             }
+
+            // 2. Xóa images (nếu có)
+            String deleteImages = "DELETE FROM images WHERE location_id = ?";
+            try (PreparedStatement stmt2 = conn.prepareStatement(deleteImages)) {
+                stmt2.setInt(1, id);
+                stmt2.executeUpdate();
+            }
+
+            // 3. Cuối cùng xóa location
+            String deleteLocation = "DELETE FROM locations WHERE id = ?";
+            try (PreparedStatement stmt3 = conn.prepareStatement(deleteLocation)) {
+                stmt3.setInt(1, id);
+                int affectedRows = stmt3.executeUpdate();
+
+                if (affectedRows > 0) {
+                    conn.commit(); // Commit nếu thành công
+                    return true;
+                } else {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
         } catch (SQLException e) {
+            try {
+                if (conn != null) conn.rollback(); // Rollback nếu có lỗi
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
             return false;
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
     private String convertImageToBase64(String imageUrl) {

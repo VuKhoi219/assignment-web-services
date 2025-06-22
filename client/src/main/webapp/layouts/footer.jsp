@@ -12,8 +12,6 @@
         <ul>
           <li><a href="${pageContext.request.contextPath}/">Trang chủ</a></li>
           <li><a href="${pageContext.request.contextPath}/locations">Địa điểm</a></li>
-          <li><a href="${pageContext.request.contextPath}/login">Đăng nhập</a></li>
-          <li><a href="${pageContext.request.contextPath}/register">Đăng ký</a></li>
         </ul>
       </div>
       

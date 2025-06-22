@@ -3,7 +3,6 @@ package com.example.backend.dto;
 public class ImageDTO {
     private Integer id;
     private String imageUrl;
-    private String imageData;
     private String caption;
     public ImageDTO() {}
 
@@ -23,13 +22,6 @@ public class ImageDTO {
         this.imageUrl = imageUrl;
     }
 
-    public String getImageData() {
-        return imageData;
-    }
-
-    public void setImageData(String imageData) {
-        this.imageData = imageData;
-    }
 
     public String getCaption() {
         return caption;
@@ -42,9 +34,7 @@ public class ImageDTO {
     public ImageDTO(Integer id, String imageUrl, String imageData, String caption) {
         this.id = id;
         this.imageUrl = imageUrl;
-        this.imageData = imageData;
         this.caption = caption;
     }
-
 
 }

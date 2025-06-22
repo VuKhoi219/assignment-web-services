@@ -18,12 +18,13 @@ import java.util.Base64;
 @WebService(endpointInterface = "com.example.backend.service.ImageService")
 public class ImageServiceImpl implements ImageService {
     private CheckRole checkRole = new CheckRole();
-
     private FileUploadUtil fileUploadUtil = new FileUploadUtil();
+
+    // Base URL cho API serve ảnh - cập nhật theo domain/port của bạn
+    private static final String BASE_IMAGE_URL = "http://localhost:8080/backend_war_exploded/api/images/serve/";
 
     private Connection getConnection() throws SQLException {
         try {
-            // Load driver
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/web_service?useSSL=false&serverTimezone=UTC",
@@ -34,9 +35,10 @@ public class ImageServiceImpl implements ImageService {
             throw new SQLException("MySQL Driver not found", e);
         }
     }
+
     @Override
     public ImageListWrapper getImages() {
-        ArrayList<ImageDTO> images = new ArrayList<>(); // Đổi từ Image sang ImageDTO
+        ArrayList<ImageDTO> images = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
             String sql = "SELECT i.id, i.image_url, i.caption, i.location_id, " +
@@ -49,10 +51,10 @@ public class ImageServiceImpl implements ImageService {
                  ResultSet rs = stmt.executeQuery()) {
 
                 while (rs.next()) {
-                    // Tạo ImageDTO thay vì Image
                     ImageDTO imageDTO = new ImageDTO();
                     imageDTO.setId(rs.getInt("id"));
-                    imageDTO.setImageUrl(rs.getString("image_url"));
+                    // Trả về URL API để serve ảnh
+                    imageDTO.setImageUrl(BASE_IMAGE_URL + rs.getInt("id"));
                     imageDTO.setCaption(rs.getString("caption"));
                     images.add(imageDTO);
                 }
@@ -62,7 +64,7 @@ public class ImageServiceImpl implements ImageService {
             throw new RuntimeException("Error retrieving images", e);
         }
 
-        return new ImageListWrapper(images); // Return wrapper với DTO list
+        return new ImageListWrapper(images);
     }
 
     @Override
@@ -80,17 +82,8 @@ public class ImageServiceImpl implements ImageService {
                     if (rs.next()) {
                         Image image = new Image();
                         image.setId(rs.getInt("id"));
-
-                        // Thay vì set imageUrl, convert sang base64
-                        String imageUrl = rs.getString("image_url");
-                        String base64Data = convertImageToBase64(imageUrl);
-
-                        // Giả sử Image class có field imageData
-                        image.setImageData(base64Data);
-
-                        // Vẫn có thể giữ imageUrl nếu cần
-                        image.setImageUrl(imageUrl);
-
+                        // Trả về URL API để serve ảnh
+                        image.setImageUrl(BASE_IMAGE_URL + id);
                         image.setCaption(rs.getString("caption"));
 
                         Location location = new Location();
@@ -110,20 +103,68 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public String uploadImage(int locationId, String base64ImageData, String filename, String caption,String token) {
+    public ArrayList<Image> getImagesByLocation(int locationId) {
+        ArrayList<Image> images = new ArrayList<>();
+        try (Connection conn = getConnection()) {
+            String sql = "SELECT i.id, i.image_url, i.caption, i.location_id " +
+                    "FROM images i WHERE i.location_id = ? ORDER BY i.id DESC";
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, locationId);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        Image image = new Image();
+                        int imageId = rs.getInt("id");
+                        image.setId(imageId);
+                        // Trả về URL API để serve ảnh
+                        image.setImageUrl(BASE_IMAGE_URL + imageId);
+                        image.setCaption(rs.getString("caption"));
+
+                        Location location = new Location();
+                        location.setId(locationId);
+                        image.setLocation(location);
+
+                        images.add(image);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return images;
+    }
+
+    // API để serve ảnh dưới dạng file
+    public byte[] serveImage(int imageId) {
+        try (Connection conn = getConnection()) {
+            String sql = "SELECT image_url FROM images WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, imageId);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        String imageUrl = rs.getString("image_url");
+                        return getImageBytes(imageUrl);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String uploadImage(int locationId, String base64ImageData, String filename, String caption, String token) {
         if(!checkRole.checkRole(token,"guide")){
             return "Bạn không có quyền sử dụng";
         }
         try {
-            // Kiểm tra location tồn tại
             if (!isLocationExists(locationId)) {
                 return "Location with ID " + locationId + " not found";
             }
-
-            // Upload file
+            System.out.println("location id : "+locationId);
             String imageUrl = fileUploadUtil.uploadImageFromBase64(base64ImageData, filename);
-
-            // Save to database
+            System.out.println("Vào đây");
             return saveImageToDatabase(locationId, imageUrl, caption);
 
         } catch (IOException e) {
@@ -138,8 +179,8 @@ public class ImageServiceImpl implements ImageService {
         if(!checkRole.checkRole(token,"guide")){
             return "Bạn không có quyền sử dụng";
         }
+        System.out.println(imageId);
         try (Connection conn = getConnection()) {
-            // Lấy thông tin image cũ
             String oldImageUrl = null;
             String selectSql = "SELECT image_url FROM images WHERE id = ?";
             try (PreparedStatement selectStmt = conn.prepareStatement(selectSql)) {
@@ -155,18 +196,15 @@ public class ImageServiceImpl implements ImageService {
 
             String newImageUrl = oldImageUrl;
 
-            // Nếu có dữ liệu ảnh mới
             if (base64ImageData != null && !base64ImageData.trim().isEmpty()) {
                 try {
                     newImageUrl = fileUploadUtil.uploadImageFromBase64(base64ImageData, filename);
-                    // Xóa file cũ
                     fileUploadUtil.deleteFile(oldImageUrl);
                 } catch (IOException e) {
                     return "File upload failed: " + e.getMessage();
                 }
             }
 
-            // Update database
             String updateSql = "UPDATE images SET image_url = ?, caption = ? WHERE id = ?";
             try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
                 updateStmt.setString(1, newImageUrl);
@@ -193,7 +231,6 @@ public class ImageServiceImpl implements ImageService {
             return "Bạn không có quyền sử dụng";
         }
         try (Connection conn = getConnection()) {
-            // Lấy thông tin image
             String imageUrl = null;
             String selectSql = "SELECT image_url FROM images WHERE id = ?";
             try (PreparedStatement selectStmt = conn.prepareStatement(selectSql)) {
@@ -207,14 +244,12 @@ public class ImageServiceImpl implements ImageService {
                 }
             }
 
-            // Xóa từ database
             String deleteSql = "DELETE FROM images WHERE id = ?";
             try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
                 deleteStmt.setInt(1, id);
 
                 int affectedRows = deleteStmt.executeUpdate();
                 if (affectedRows > 0) {
-                    // Xóa file
                     fileUploadUtil.deleteFile(imageUrl);
                     return "Image deleted successfully";
                 } else {
@@ -226,55 +261,6 @@ public class ImageServiceImpl implements ImageService {
             e.printStackTrace();
             return "Database error: " + e.getMessage();
         }
-    }
-
-    @Override
-    public ArrayList<Image> getImagesByLocation(int locationId) {
-        ArrayList<Image> images = new ArrayList<>();
-        try (Connection conn = getConnection()) {
-            String sql = "SELECT i.id, i.image_url, i.caption, i.location_id " +
-                    "FROM images i WHERE i.location_id = ? ORDER BY i.id DESC";
-
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setInt(1, locationId);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        Image image = new Image();
-                        image.setId(rs.getInt("id"));
-                        image.setImageUrl(rs.getString("image_url"));
-                        image.setCaption(rs.getString("caption"));
-
-                        Location location = new Location();
-                        location.setId(locationId);
-                        image.setLocation(location);
-
-                        images.add(image);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return images;
-    }
-
-    @Override
-    public String getImageAsBase64(int imageId) {
-        try (Connection conn = getConnection()) {
-            String sql = "SELECT image_url FROM images WHERE id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setInt(1, imageId);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        String imageUrl = rs.getString("image_url");
-                        return convertImageToBase64(imageUrl);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     // Helper methods
@@ -295,6 +281,9 @@ public class ImageServiceImpl implements ImageService {
 
     private String saveImageToDatabase(int locationId, String imageUrl, String caption) {
         try (Connection conn = getConnection()) {
+            System.out.println("locationId: " + locationId);
+            System.out.println("imageUrl: " + imageUrl);
+            System.out.println("caption: " + caption);
             String sql = "INSERT INTO images (location_id, image_url, caption) VALUES (?, ?, ?)";
             try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 stmt.setInt(1, locationId);
@@ -320,12 +309,12 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
-    private String convertImageToBase64(String imageUrl) {
+    // Helper method để đọc file ảnh thành byte array
+    private byte[] getImageBytes(String imageUrl) {
         try {
             if (imageUrl != null && imageUrl.startsWith("/uploads/images/")) {
                 String filename = imageUrl.substring("/uploads/images/".length());
-                byte[] fileBytes = Files.readAllBytes(Paths.get("uploads/images/" + filename));
-                return Base64.getEncoder().encodeToString(fileBytes);
+                return Files.readAllBytes(Paths.get("uploads/images/" + filename));
             }
         } catch (Exception e) {
             e.printStackTrace();
