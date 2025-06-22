@@ -48,6 +48,32 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- jjwt-api -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <!-- jjwt-impl -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <!-- jjwt-jackson để JJWT có thể parse JSON (token) -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -56,6 +82,35 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- Thư mục để lưu trữ các file .java được sinh ra -->
+                    <sourceDestDir>${project.build.directory}/generated-sources/wsimport</sourceDestDir>
+                    <!-- Package cho các lớp được sinh ra -->
+                    <packageName>com.mycompany.client.generated</packageName>
+                    <!-- Danh sách các URL WSDL -->
+                    <wsdlUrls>
+                        <!-- !!! THAY THẾ BẰNG URL WSDL CỦA BẠN !!! -->
+                        <wsdlUrl>http://localhost:8080/backend_war_exploded/userService?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:8080/backend_war_exploded/imageService?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:8080/backend_war_exploded/commentService?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:8080/backend_war_exploded/locationService?wsdl</wsdlUrl>
+
+                    </wsdlUrls>
+                    <keep>true</keep>
+                    <verbose>true</verbose>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoints
+        xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime"
+        version="2.0">
+    <endpoint
+            name="UserService"
+            implementation="com.example.backend.service.UserServiceImpl"
+            url-pattern="/userService"/>
+    <endpoint
+            name="LocationService"
+            implementation="com.example.backend.service.LocationServiceImpl"
+            url-pattern="/locationService"/>
+    <endpoint
+            name="ImageService"
+            implementation="com.example.backend.service.ImageServiceImpl"
+            url-pattern="/imageService"/>
+    <endpoint
+            name="CommentService"
+            implementation="com.example.backend.service.CommentServiceImpl"
+            url-pattern="/commentService"/>
+</endpoints>

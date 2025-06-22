@@ -3,4 +3,50 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+    <servlet>
+        <servlet-name>UserService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>ImageService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>CommentService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>LocationService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserService</servlet-name>
+        <url-pattern>/userService</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ImageService</servlet-name>
+        <url-pattern>/imageService</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CommentService</servlet-name>
+        <url-pattern>/commentService</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LocationService</servlet-name>
+        <url-pattern>/locationService</url-pattern>
+    </servlet-mapping>
+
+    <!-- Thêm listener này - QUAN TRỌNG -->
+    <listener>
+        <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
+    </listener>
 </web-app>

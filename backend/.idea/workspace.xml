@@ -9,11 +9,60 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="15cfc607-13c3-47ac-a13c-aca11a894742" name="Changes" comment="" />
+    <list default="true" id="15cfc607-13c3-47ac-a13c-aca11a894742" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/ImageServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/dto/ImageDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/dto/ImageDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/dto/LocationDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/dto/LocationDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/service/ImageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/service/ImageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/service/ImageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/service/ImageServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/service/LocationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/service/LocationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/backend/util/FileUploadUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/backend/util/FileUploadUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../client/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/auth/RegisterAndLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/java/com/example/client/auth/RegisterAndLogin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/auth/RoleFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/controller/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/java/com/example/client/controller/HomeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/controller/LocationListController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/controller/PageController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/controller/SearchController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/controller/ViewDetailsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/service/CommentClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/service/LocationClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/java/com/example/client/service/SimpleImageClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/index.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/layout.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/webapp/layout.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/layouts/footer.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/webapp/layouts/footer.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/layouts/header.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/webapp/layouts/header.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/pages/home.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/webapp/pages/home.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/pages/location-details.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/pages/locations-list.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/pages/login.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/webapp/pages/login.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/pages/register.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/webapp/pages/register.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/pages/search-results.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/main/webapp/pages/search.jsp" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Jsp File" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="tu" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="LogFilters">
     <option name="FILTER_ERRORS" value="false" />
@@ -29,33 +78,42 @@
       </MavenGeneralSettings>
     </option>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2yS93WkZqcLM39rdjRGJW4dxDZk" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "TomEE Server.TomEE 9.0.82.executor": "Run",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;TomEE Server.TomEE 9.0.82.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;khoi&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Sem4/Assignment/backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Sem4\Assignment\backend\src\main\java\com\example\backend" />
+      <recent name="E:\Sem4\Assignment\backend\src\main\webapp\WEB-INF" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="TomEE 9.0.82" type="TomeeConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="TomEE 9.0.82" ALTERNATIVE_JRE_ENABLED="false">
       <deployment>
         <artifact name="backend:war exploded">
           <settings>
-            <option name="CONTEXT_PATH" value="/" />
+            <option name="CONTEXT_PATH" value="/backend_war_exploded" />
           </settings>
         </artifact>
       </deployment>
@@ -155,6 +213,36 @@
       <option name="presentableId" value="Default" />
       <updated>1749816910305</updated>
       <workItem from="1749816911475" duration="989000" />
+      <workItem from="1749818574586" duration="4064000" />
+      <workItem from="1749882654954" duration="15143000" />
+      <workItem from="1749908097397" duration="15330000" />
+      <workItem from="1749953018805" duration="14463000" />
+      <workItem from="1749970047120" duration="509000" />
+      <workItem from="1749971142829" duration="615000" />
+      <workItem from="1750053072124" duration="24000" />
+      <workItem from="1750075381341" duration="660000" />
+      <workItem from="1750079696648" duration="562000" />
+      <workItem from="1750089628700" duration="1382000" />
+      <workItem from="1750150062125" duration="5762000" />
+      <workItem from="1750166522450" duration="3944000" />
+      <workItem from="1750241022483" duration="338000" />
+      <workItem from="1750246173685" duration="2025000" />
+      <workItem from="1750252171572" duration="1822000" />
+      <workItem from="1750256587245" duration="11000" />
+      <workItem from="1750297227341" duration="1255000" />
+      <workItem from="1750301942100" duration="3109000" />
+      <workItem from="1750320085227" duration="3854000" />
+      <workItem from="1750340867272" duration="8444000" />
+      <workItem from="1750383454468" duration="4378000" />
+      <workItem from="1750417020114" duration="4199000" />
+      <workItem from="1750431139268" duration="6785000" />
+      <workItem from="1750483631344" duration="1294000" />
+      <workItem from="1750496619549" duration="610000" />
+      <workItem from="1750498411039" duration="3671000" />
+      <workItem from="1750505330640" duration="14912000" />
+      <workItem from="1750571752896" duration="9151000" />
+      <workItem from="1750600424427" duration="10901000" />
+      <workItem from="1750615430487" duration="4000" />
     </task>
     <servers />
   </component>
