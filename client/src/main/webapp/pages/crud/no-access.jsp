@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: DELL G15
-  Date: 6/21/2025
-  Time: 11:25 PM
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div  class="bg-gradient-to-br from-gray-900 to-indigo-900 min-h-screen flex items-center justify-center text-white bg-pattern overflow-hidden">
   <div class="absolute inset-0 overflow-hidden">
