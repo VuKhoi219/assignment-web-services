@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!-- layouts/footer.jsp -->
 <footer class="main-footer">
   <div class="footer-container">
     <div class="footer-content">
